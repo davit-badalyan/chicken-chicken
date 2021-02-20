@@ -10,57 +10,104 @@ public class PlayerController : MonoBehaviour
     
     public GameObject leftLeg;
     public GameObject rightLeg;
-    public float speed = 10.0f;
+    public Vector3 startPosition = new Vector3(0, 0.5f, -3);
+    
+    public float movementSpeed = 20.0f;
+    public float rotationSpeed = 60.0f;
 
     void Start()
     {
         // _playerRb = GetComponent<Rigidbody>();
         // playerRb.centerOfMass = centerOfMass.transform.position;
-        leftLeg.SetActive(false);
+        rightLeg.SetActive(false);
     }
 
     void Update()
     {
         // This is where we get player input
-        // _horizontalInput = Input.GetAxis("Horizontal");
+        _horizontalInput = Input.GetAxis("Horizontal");
         // _forwardInput = Input.GetAxis("Vertical");
+        
+        CheckForRestart();
 
-        // Move the Player forward
-        if (Input.GetKeyDown(KeyCode.A))
+        MovePlayer();
+        RotatePlayer();
+        FallPlayer();
+
+    }
+
+    void CheckForRestart()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            if (leftLeg.activeSelf)
-            {
-                transform.Translate(Vector3.forward * (Time.deltaTime * speed));
-                // transform.Rotate(Vector3.forward * (Time.deltaTime * 30));
-
-                leftLeg.SetActive(false);
-                rightLeg.SetActive(true);
-            }
+            transform.position = startPosition;
+            transform.rotation = Quaternion.identity;
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+    }
+
+    void MovePlayer()
+    {
+        if (!isFallen())
         {
-            if (rightLeg.activeSelf)
+            // Move Player forward
+            transform.Translate(Vector3.forward * (Time.deltaTime * movementSpeed));
+        
+            // Move Player left and right depend on user input
+            transform.Translate(Vector3.right * (Time.deltaTime * movementSpeed * 5 * _horizontalInput), Space.World);
+        }
+    }
+
+    void RotatePlayer()
+    {
+        if (!isFallen())
+        {
+            // Rotate Player left and right depend on user input
+            if (_horizontalInput > 0)
             {
-                transform.Translate(Vector3.forward * (Time.deltaTime * speed));
-                // transform.Rotate(Vector3.back * (Time.deltaTime * 30));
+                transform.Rotate(Vector3.back * (Time.deltaTime * rotationSpeed));
                 
+                rightLeg.SetActive(true);
+                leftLeg.SetActive(false); 
+            } else if (_horizontalInput < 0)
+            {
+                transform.Rotate(Vector3.forward * (Time.deltaTime * rotationSpeed));
+
+                leftLeg.SetActive(true);
                 rightLeg.SetActive(false);
-                leftLeg.SetActive(true); 
             }
         }
+    }
 
-
-
-        // Move the Player left and right depend on user input
-        // if (_horizontalInput != 0)
-        // {
-        //     transform.Translate(Vector3.right * (Time.deltaTime * speed * _horizontalInput));
-        // }
+    void FallPlayer()
+    {
+        if (!isFallen())
+        {
+            // Rotate Player based on which leg is active 
+            if (rightLeg.activeSelf && _horizontalInput == 0)
+            {
+                transform.Rotate(Vector3.back * (Time.deltaTime * rotationSpeed));
+            }
+            else if (leftLeg.activeSelf && _horizontalInput == 0)
+            {
+                transform.Rotate(Vector3.forward * (Time.deltaTime * rotationSpeed));
+            }
+        }
     }
 
     bool isOnGround()
     {
         return true;
     }
-
+    
+    bool isFallen()
+    {
+        if (transform.rotation.z * 100 >= 45.00f || transform.rotation.z * 100 <= -45.00f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
