@@ -2548,7 +2548,8 @@ MonoBehaviour:
   leftLeg: {fileID: 584912319}
   rightLeg: {fileID: 1415851833}
   startPosition: {x: 0, y: 0.5, z: -3}
-  movementSpeed: 10
+  forwardMovementSpeed: 20
+  sideMovementSpeed: 20
   rotationSpeed: 120
 --- !u!4 &1350475221
 Transform:
