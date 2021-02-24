@@ -6,15 +6,21 @@ public class PlayerController : MonoBehaviour
 {
     // Variables
     public Vector3 startPosition = new Vector3(0, 0.5f, -3);
+    public Vector3 rotationAngle = new Vector3(0, 0, 0);
+    
+    public GameObject body;
     public GameObject leftLeg;
     public GameObject rightLeg;
 
-    public float forwardMovementSpeed = 20.0f;
-    public float sideMovementSpeed = 30.0f;
-    public float rotationSpeed = 60.0f;
+    public float forwardMovementSpeed = 10.0f;
+    public float sideMovementSpeed = 20.0f;
+    public float rotationSpeed = 90.0f;
+    public float rotationBound = 45.0f;
+
 
     void Start()
     {
+        transform.position = startPosition;
         rightLeg.SetActive(false);
     }
 
@@ -31,6 +37,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            rotationAngle = Vector3.zero;
+            
             transform.position = startPosition;
             transform.rotation = Quaternion.identity;
         }
@@ -38,15 +46,17 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
-        if (!isFallen())
+        if (!isFallen() && isOnGround())
         {
             // Move Player forward
             transform.Translate(Vector3.forward * (Time.deltaTime * forwardMovementSpeed));
         
+            // Move Player right and left based on input
             if (Input.GetKey(KeyCode.D))
             {
                 transform.Translate(Vector3.right * (Time.deltaTime * sideMovementSpeed), Space.World);
-            } else if (Input.GetKey(KeyCode.A))
+            } 
+            else if (Input.GetKey(KeyCode.A))
             {
                 transform.Translate(Vector3.left * (Time.deltaTime * sideMovementSpeed), Space.World);
             }
@@ -55,19 +65,23 @@ public class PlayerController : MonoBehaviour
 
     void RotatePlayer()
     {
-        if (!isFallen())
+        if (!isFallen() && isOnGround())
         {
             ResetRotation();
-            // Rotate Player left and right depend on user input
+            
+            // Rotate Player left and right based on input
             if (Input.GetKey(KeyCode.D))
             {
-                transform.Rotate(Vector3.back * (Time.deltaTime * rotationSpeed));
+                rotationAngle += Vector3.back * (Time.deltaTime * rotationSpeed);
+                transform.eulerAngles = rotationAngle;
                 
                 rightLeg.SetActive(true);
                 leftLeg.SetActive(false); 
-            } else if (Input.GetKey(KeyCode.A))
+            } 
+            else if (Input.GetKey(KeyCode.A))
             {
-                transform.Rotate(Vector3.forward * (Time.deltaTime * rotationSpeed));
+                rotationAngle += Vector3.forward * (Time.deltaTime * rotationSpeed);
+                transform.eulerAngles = rotationAngle;
 
                 leftLeg.SetActive(true);
                 rightLeg.SetActive(false);
@@ -77,16 +91,18 @@ public class PlayerController : MonoBehaviour
 
     void FallPlayer()
     {
-        if (!isFallen())
+        if (!isFallen() && isOnGround())
         {
             // Rotate Player based on which leg is active 
             if (rightLeg.activeSelf)
             {
-                transform.Rotate(Vector3.back * (Time.deltaTime * rotationSpeed));
+                rotationAngle += Vector3.back * (Time.deltaTime * rotationSpeed);
+                transform.eulerAngles = rotationAngle;
             }
             else if (leftLeg.activeSelf)
             {
-                transform.Rotate(Vector3.forward * (Time.deltaTime * rotationSpeed));
+                rotationAngle += Vector3.forward * (Time.deltaTime * rotationSpeed);
+                transform.eulerAngles = rotationAngle;
             }
         }
     }
@@ -101,20 +117,32 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, zeroRotation, Time.deltaTime * speed);
         }
     }
-
-    bool isOnGround()
-    {
-        return true;
-    }
     
     bool isFallen()
     {
-        if (transform.rotation.z * 100 >= 45.00f || transform.rotation.z * 100 <= -45.00f)
+        if (rotationAngle.z >= rotationBound || rotationAngle.z <= -rotationBound)    
         {
             return true;
         }
         else
         {
+            return false;
+        }
+    }
+    
+    bool isOnGround()
+    {
+        RaycastHit hit;
+        int layerMask = 1 << 8;
+
+        if (Physics.Raycast(body.transform.position, body.transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask))
+        {
+            Debug.DrawRay(body.transform.position, body.transform.TransformDirection(Vector3.forward) * 1000, Color.green);
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(body.transform.position, body.transform.TransformDirection(Vector3.forward) * 1000, Color.red);
             return false;
         }
     }
