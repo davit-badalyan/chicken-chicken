@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Variables
+    private float screenWidth;
+    private float screenHeight;
+    
     public Vector3 startPosition = new Vector3(0, 0.5f, -3);
     public Vector3 rotationAngle = new Vector3(0, 0, 0);
     
@@ -13,12 +16,17 @@ public class PlayerController : MonoBehaviour
     public GameObject rightLeg;
 
     public float forwardMovementSpeed = 20.0f;
-    public float sideMovementSpeed = 90.0f;
+    public float sideMovementSpeed = 120.0f;
     public float rotationSpeed = 120.0f;
     public float fallingSpeed = 90.0f;
     public float rotationBound = 45.0f;
-
-
+    
+    void Awake()
+    {
+        screenWidth = Screen.width / 2.0f;
+        screenHeight = Screen.height / 2.0f;
+    }
+    
     void Start()
     {
         transform.position = startPosition;
@@ -27,8 +35,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        CheckForRestart();
-        
+        if (Input.GetKeyDown(KeyCode.R) || Input.touchCount == 3)
+        {
+            Restart();
+        }
+
+
         if (!isFallen() && isOnGround())
         {
             FallPlayer();
@@ -44,19 +56,36 @@ public class PlayerController : MonoBehaviour
                 MoveSide(Vector3.left);
                 RotatePlayer(Vector3.forward);
             }
+
+            if (Input.touchCount == 1)
+            {
+                Touch touch = Input.GetTouch(0);
+                Vector2 touchPosition = touch.position;
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    if (touchPosition.x >= screenWidth)
+                    {
+                        MoveSide(Vector3.right);
+                        RotatePlayer(Vector3.back);
+                    } 
+                    else if (touchPosition.x < screenWidth)
+                    {
+                        MoveSide(Vector3.left);
+                        RotatePlayer(Vector3.forward);                    
+                    }
+                }
+            }
         }
         
     }
 
-    void CheckForRestart()
+    void Restart()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            rotationAngle = Vector3.zero;
+        rotationAngle = Vector3.zero;
             
-            transform.position = startPosition;
-            transform.rotation = Quaternion.identity;
-        }
+        transform.position = startPosition;
+        transform.rotation = Quaternion.identity;
     }
 
     void MoveForward()
