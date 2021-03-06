@@ -2493,9 +2493,10 @@ MonoBehaviour:
   body: {fileID: 1476167385}
   leftLeg: {fileID: 584912319}
   rightLeg: {fileID: 1415851833}
-  forwardMovementSpeed: 15
-  sideMovementSpeed: 20
-  rotationSpeed: 90
+  forwardMovementSpeed: 20
+  sideMovementSpeed: 90
+  rotationSpeed: 120
+  fallingSpeed: 90
   rotationBound: 45
 --- !u!4 &1350475221
 Transform:

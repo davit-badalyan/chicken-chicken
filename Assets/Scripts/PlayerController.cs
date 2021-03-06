@@ -12,9 +12,10 @@ public class PlayerController : MonoBehaviour
     public GameObject leftLeg;
     public GameObject rightLeg;
 
-    public float forwardMovementSpeed = 10.0f;
-    public float sideMovementSpeed = 20.0f;
-    public float rotationSpeed = 90.0f;
+    public float forwardMovementSpeed = 20.0f;
+    public float sideMovementSpeed = 90.0f;
+    public float rotationSpeed = 120.0f;
+    public float fallingSpeed = 90.0f;
     public float rotationBound = 45.0f;
 
 
@@ -27,10 +28,24 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         CheckForRestart();
-
-        MovePlayer();
-        RotatePlayer();
-        FallPlayer();
+        
+        if (!isFallen() && isOnGround())
+        {
+            FallPlayer();
+            MoveForward();
+            
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                MoveSide(Vector3.right);
+                RotatePlayer(Vector3.back);
+            }
+            else if(Input.GetKeyDown(KeyCode.A))
+            {
+                MoveSide(Vector3.left);
+                RotatePlayer(Vector3.forward);
+            }
+        }
+        
     }
 
     void CheckForRestart()
@@ -44,80 +59,54 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void MovePlayer()
+    void MoveForward()
     {
-        if (!isFallen() && isOnGround())
-        {
-            // Move Player forward
-            transform.Translate(Vector3.forward * (Time.deltaTime * forwardMovementSpeed));
-        
-            // Move Player right and left based on input
-            if (Input.GetKey(KeyCode.D))
-            {
-                transform.Translate(Vector3.right * (Time.deltaTime * sideMovementSpeed), Space.World);
-            } 
-            else if (Input.GetKey(KeyCode.A))
-            {
-                transform.Translate(Vector3.left * (Time.deltaTime * sideMovementSpeed), Space.World);
-            }
-        }
+        transform.Translate(Vector3.forward * (Time.deltaTime * forwardMovementSpeed));
+    }
+    
+    void MoveSide(Vector3 direction)
+    {
+        transform.Translate(direction * (Time.deltaTime * sideMovementSpeed), Space.World);
     }
 
-    void RotatePlayer()
+    void RotatePlayer(Vector3 direction)
     {
-        if (!isFallen() && isOnGround())
-        {
-            ResetRotation();
-            
-            // Rotate Player left and right based on input
-            if (Input.GetKey(KeyCode.D))
-            {
-                rotationAngle += Vector3.back * (Time.deltaTime * rotationSpeed);
-                transform.eulerAngles = rotationAngle;
-                
-                rightLeg.SetActive(true);
-                leftLeg.SetActive(false); 
-            } 
-            else if (Input.GetKey(KeyCode.A))
-            {
-                rotationAngle += Vector3.forward * (Time.deltaTime * rotationSpeed);
-                transform.eulerAngles = rotationAngle;
+        ResetRotation();
+        Rotate(direction, rotationSpeed);
 
-                leftLeg.SetActive(true);
-                rightLeg.SetActive(false);
-            }
-        }
+        leftLeg.SetActive(!leftLeg.activeSelf);
+        rightLeg.SetActive(!rightLeg.activeSelf);
     }
 
     void FallPlayer()
     {
-        if (!isFallen() && isOnGround())
-        {
-            // Rotate Player based on which leg is active 
-            if (rightLeg.activeSelf)
-            {
-                rotationAngle += Vector3.back * (Time.deltaTime * rotationSpeed);
-                transform.eulerAngles = rotationAngle;
-            }
-            else if (leftLeg.activeSelf)
-            {
-                rotationAngle += Vector3.forward * (Time.deltaTime * rotationSpeed);
-                transform.eulerAngles = rotationAngle;
-            }
+        if (rotationAngle.z < 0) {
+            Rotate(Vector3.back, fallingSpeed);
         }
+        else
+        {
+            Rotate(Vector3.forward, fallingSpeed);
+        }
+    }
+
+    void Rotate(Vector3 direction, float speed)
+    {
+        rotationAngle += direction * (Time.deltaTime * speed);
+        RotateToAngle(rotationAngle, rotationSpeed);
     }
 
     void ResetRotation()
     {
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A))
-        {
-            float speed = 20.0f;
-            Quaternion zeroRotation = Quaternion.identity;
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, zeroRotation, Time.deltaTime * speed);
-        }
+        rotationAngle = Vector3.zero;
+        RotateToAngle(rotationAngle, 20.0f);
     }
-    
+
+    void RotateToAngle(Vector3 angle,float speed)
+    {
+        Quaternion toAngle = Quaternion.Euler(angle);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, toAngle, Time.deltaTime * speed);
+    }
+
     bool isFallen()
     {
         if (rotationAngle.z >= rotationBound || rotationAngle.z <= -rotationBound)    
