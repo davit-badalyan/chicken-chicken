@@ -12,7 +12,6 @@ public class MovementScript : MonoBehaviour
     public float forwardMovementSpeed = 20.0f;
     public float sideMovementSpeed = 120.0f;
     
-    // Update is called once per frame
     private void Update()
     {
         if (GameManager.Instance.GameStarted)

@@ -25,6 +25,8 @@ public class UIManager : MonoBehaviour
     public static event Action onPlayerFail;
     public static event Action onGameResume;
 
+    public GameObject backgroundPanel;
+
     private void Awake()
     {
         instance = this;
@@ -37,21 +39,25 @@ public class UIManager : MonoBehaviour
 
     public void ShowMainMenu()
     {
+        backgroundPanel.SetActive(true);
         onGameOpen?.Invoke();
     }
 
     public void HideMainMenu()
     {
+        backgroundPanel.SetActive(false);
         onGameStart?.Invoke();
     }
 
     public void ShowPauseMenu()
     {
+        backgroundPanel.SetActive(true);
         onPlayerFail?.Invoke();
     }
 
     public void HidePauseMenu()
     {
+        backgroundPanel.SetActive(false);
         onGameResume?.Invoke();
     }
 }

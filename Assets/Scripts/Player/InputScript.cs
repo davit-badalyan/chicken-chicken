@@ -31,23 +31,26 @@ public class InputScript : MonoBehaviour
                 player.rotationScript.ResetRotation(1);
             }
         }
-        
-        if (Input.touchCount == 1)
+
+        if (GameManager.Instance.GameStarted && !GameManager.Instance.PlayerFailed)
         {
-            Touch touch = Input.GetTouch(0);
-            Vector2 touchPosition = touch.position;
-        
-            if (touch.phase == TouchPhase.Began)
+            if (Input.touchCount == 1)
             {
-                if (touchPosition.x >= screenWidth)
+                Touch touch = Input.GetTouch(0);
+                Vector2 touchPosition = touch.position;
+        
+                if (touch.phase == TouchPhase.Began)
                 {
-                    player.movementScript.MoveSide(1);
-                    player.rotationScript.ResetRotation(-1);
-                } 
-                else if (touchPosition.x < screenWidth)
-                {
-                    player.movementScript.MoveSide(-1);
-                    player.rotationScript.ResetRotation(1);                   
+                    if (touchPosition.x >= screenWidth)
+                    {
+                        player.movementScript.MoveSide(1);
+                        player.rotationScript.ResetRotation(-1);
+                    } 
+                    else if (touchPosition.x < screenWidth)
+                    {
+                        player.movementScript.MoveSide(-1);
+                        player.rotationScript.ResetRotation(1);                   
+                    }
                 }
             }
         }
