@@ -23,14 +23,12 @@ public class GameManager : MonoBehaviour
     public bool GameStarted
     {
         get => gameStarted;
-        set => gameStarted = value;
     }
 
-    private static bool playerFailed = false;
+    private static bool playerFailed;
     public bool PlayerFailed
     {
         get => playerFailed;
-        set => playerFailed = value;
     }
 
     private void Awake()

@@ -3452,6 +3452,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1350475221}
   - component: {fileID: 1350475220}
+  - component: {fileID: 1350475224}
+  - component: {fileID: 1350475223}
+  - component: {fileID: 1350475222}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3471,18 +3474,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1210a24c7a6c13d4ebf94e0dc6a10b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPosition: {x: 0, y: 0.5, z: -3}
   body: {fileID: 1476167385}
   leftLeg: {fileID: 584912319}
   rightLeg: {fileID: 1415851833}
-  forwardMovementSpeed: 20
-  sideMovementSpeed: 120
-  rotationSpeed: 120
-  fallingSpeed: 90
-  rotationBound: 45
-  zRotation: 0
-  targetAngle: 0
-  fallDirection: 0
+  inputScript: {fileID: 1350475224}
+  movementScript: {fileID: 1350475223}
+  rotationScript: {fileID: 1350475222}
+  startPosition: {x: 0, y: 0.5, z: -3}
 --- !u!4 &1350475221
 Transform:
   m_ObjectHideFlags: 0
@@ -3498,6 +3496,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1350475222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350475219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a9e103e73a1b4408d42ec47157a0a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1350475220}
+  fallDirection: 0
+  zRotation: 0
+  targetAngle: 0
+  fallingSpeed: 90
+  rotationBound: 45
+--- !u!114 &1350475223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350475219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0be8e56f96b1c76408d460b812ab79b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1350475220}
+  xPosition: 0
+  targetPositionX: 0
+  forwardMovementSpeed: 20
+  sideMovementSpeed: 120
+--- !u!114 &1350475224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350475219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09aa810514d3e8d4ba331a9c52d02603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1350475220}
 --- !u!1 &1415851833
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,33 +37,21 @@ public class UIManager : MonoBehaviour
 
     public void ShowMainMenu()
     {
-        if (onGameOpen != null)
-        {
-            onGameOpen();
-        }
+        onGameOpen?.Invoke();
     }
 
     public void HideMainMenu()
     {
-        if (onGameStart != null)
-        {
-            onGameStart();
-        }
+        onGameStart?.Invoke();
     }
 
     public void ShowPauseMenu()
     {
-        if (onPlayerFail != null)
-        {
-            onPlayerFail();
-        }
+        onPlayerFail?.Invoke();
     }
 
     public void HidePauseMenu()
     {
-        if (onGameResume != null)
-        {
-            onGameResume();
-        }
+        onGameResume?.Invoke();
     }
 }
