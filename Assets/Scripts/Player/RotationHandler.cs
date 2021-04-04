@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RotationScript : MonoBehaviour
+public class RotationHandler : MonoBehaviour
 {
     private float r;
 
@@ -46,8 +46,5 @@ public class RotationScript : MonoBehaviour
     {
         targetAngle = 0;
         fallDirection = direction;
-
-        player.leftLeg.SetActive(direction > 0);
-        player.rightLeg.SetActive(direction < 0);
     }
 }

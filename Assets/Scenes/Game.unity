@@ -3566,9 +3566,9 @@ MonoBehaviour:
   body: {fileID: 1476167385}
   leftLeg: {fileID: 584912319}
   rightLeg: {fileID: 1415851833}
-  inputScript: {fileID: 1350475224}
-  movementScript: {fileID: 1350475223}
-  rotationScript: {fileID: 1350475222}
+  inputHandler: {fileID: 1350475224}
+  movementHandler: {fileID: 1350475223}
+  rotationHandler: {fileID: 1350475222}
   startPosition: {x: 0, y: 0.5, z: -3}
 --- !u!4 &1350475221
 Transform:
@@ -3594,7 +3594,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1350475219}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a9e103e73a1b4408d42ec47157a0a7, type: 3}
+  m_Script: {fileID: 11500000, guid: b13989f57dbc5fe4fb091166f0f4239b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1350475220}
@@ -3612,14 +3612,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1350475219}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0be8e56f96b1c76408d460b812ab79b3, type: 3}
+  m_Script: {fileID: 11500000, guid: d7fbb277993450b41bd93c9c3268516f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1350475220}
   xPosition: 0
-  targetPositionX: 0
   forwardMovementSpeed: 20
-  sideMovementSpeed: 120
+  sideMovementDistance: 2
+  sideMovementSpeed: 2
 --- !u!114 &1350475224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3629,7 +3629,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1350475219}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09aa810514d3e8d4ba331a9c52d02603, type: 3}
+  m_Script: {fileID: 11500000, guid: 296d57e5338380b4db8894cbdd621263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1350475220}

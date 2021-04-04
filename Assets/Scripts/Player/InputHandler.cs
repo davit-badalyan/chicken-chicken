@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputScript : MonoBehaviour
+public class InputHandler : MonoBehaviour
 {
     private float screenWidth;
     private float screenHeight;
@@ -22,13 +21,15 @@ public class InputScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.D))
             {
-                player.movementScript.MoveSide(1);
-                player.rotationScript.ResetRotation(-1);
+                player.ChangeActiveLeg(-1);
+                player.movementHandler.MoveSide(1);
+                player.rotationHandler.ResetRotation(-1);
             }
             else if(Input.GetKeyDown(KeyCode.A))
             {
-                player.movementScript.MoveSide(-1);
-                player.rotationScript.ResetRotation(1);
+                player.ChangeActiveLeg(1);
+                player.movementHandler.MoveSide(-1);
+                player.rotationHandler.ResetRotation(1);
             }
         }
 
@@ -43,13 +44,15 @@ public class InputScript : MonoBehaviour
                 {
                     if (touchPosition.x >= screenWidth)
                     {
-                        player.movementScript.MoveSide(1);
-                        player.rotationScript.ResetRotation(-1);
+                        player.ChangeActiveLeg(-1);
+                        player.movementHandler.MoveSide(1);
+                        player.rotationHandler.ResetRotation(-1);
                     } 
                     else if (touchPosition.x < screenWidth)
                     {
-                        player.movementScript.MoveSide(-1);
-                        player.rotationScript.ResetRotation(1);                   
+                        player.ChangeActiveLeg(1);
+                        player.movementHandler.MoveSide(-1);
+                        player.rotationHandler.ResetRotation(1);                   
                     }
                 }
             }

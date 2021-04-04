@@ -10,7 +10,6 @@ public class FollowPlayer : MonoBehaviour
     
     void LateUpdate()
     {
-        // Camera follows the player
         transform.position = player.transform.position + offset;
     }
 }

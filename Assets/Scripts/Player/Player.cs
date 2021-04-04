@@ -21,9 +21,9 @@ public class Player : MonoBehaviour
     public GameObject body;
     public GameObject leftLeg;
     public GameObject rightLeg;
-    public InputScript inputScript;
-    public MovementScript movementScript;
-    public RotationScript rotationScript;
+    public InputHandler inputHandler;
+    public MovementHandler movementHandler;
+    public RotationHandler rotationHandler;
     public Vector3 startPosition = new Vector3(0, 0.5f, -3);
 
     private void Awake()
@@ -38,16 +38,20 @@ public class Player : MonoBehaviour
     
     public void Resume()
     {
-        rotationScript.zRotation = 0;
-        rotationScript.targetAngle = 0;
-        rotationScript.fallDirection = -1;
-        movementScript.xPosition = 0;
-        movementScript.targetPositionX = 0;
-        
+        rotationHandler.zRotation = 0;
+        rotationHandler.targetAngle = 0;
+        rotationHandler.fallDirection = -1;
+        movementHandler.xPosition = 0;
         transform.position = startPosition;
         transform.rotation = Quaternion.identity;
         
         rightLeg.SetActive(true);
         leftLeg.SetActive(false);
+    }
+    
+    public void ChangeActiveLeg(int direction)
+    {
+        leftLeg.SetActive(direction > 0);
+        rightLeg.SetActive(direction < 0);
     }
 }

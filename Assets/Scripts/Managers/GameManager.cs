@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         playerFailed = true;
+        Player.Instance.movementHandler.StopSideMovement();
         UIManager.Instance.ShowPauseMenu();
     }
 
