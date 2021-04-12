@@ -41,7 +41,7 @@ public class RotationHandler : MonoBehaviour
     {
         return zRotation >= rotationBound || zRotation <= -rotationBound;
     }
-    
+
     public void ResetRotation(int direction)
     {
         targetAngle = 0;

@@ -38,10 +38,16 @@ public class Player : MonoBehaviour
     
     public void Resume()
     {
+        inputHandler.joystickDirection = 0;
+        inputHandler.joystick.HideJoystick();
+        
         rotationHandler.zRotation = 0;
         rotationHandler.targetAngle = 0;
         rotationHandler.fallDirection = -1;
+        
         movementHandler.xPosition = 0;
+        movementHandler.targetPositionX = 0;
+        
         transform.position = startPosition;
         transform.rotation = Quaternion.identity;
         

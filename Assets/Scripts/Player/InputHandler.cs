@@ -8,6 +8,8 @@ public class InputHandler : MonoBehaviour
     private float screenHeight;
     
     public Player player;
+    public Joystick joystick;
+    public float joystickDirection;
 
     private void Awake()
     {
@@ -19,43 +21,103 @@ public class InputHandler : MonoBehaviour
     {
         if (GameManager.Instance.GameStarted && !GameManager.Instance.PlayerFailed)
         {
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                player.ChangeActiveLeg(-1);
-                player.movementHandler.MoveSide(1);
-                player.rotationHandler.ResetRotation(-1);
-            }
-            else if(Input.GetKeyDown(KeyCode.A))
-            {
-                player.ChangeActiveLeg(1);
-                player.movementHandler.MoveSide(-1);
-                player.rotationHandler.ResetRotation(1);
-            }
+            CheckForKeyboardInput();
+            CheckForTouchInput();
+            CheckForJoystickInput();
         }
-
-        if (GameManager.Instance.GameStarted && !GameManager.Instance.PlayerFailed)
+        else
         {
-            if (Input.touchCount == 1)
-            {
-                Touch touch = Input.GetTouch(0);
-                Vector2 touchPosition = touch.position;
+            HideJoystick();
+        }
+    }
+
+    private void CheckForKeyboardInput()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            MoveRight();
+        }
+        else if(Input.GetKeyDown(KeyCode.A))
+        {
+            MoveLeft();
+        }
+    }
+    
+    private void CheckForTouchInput()
+    {
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+            Vector2 touchPosition = touch.position;
         
-                if (touch.phase == TouchPhase.Began)
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (touchPosition.x >= screenWidth)
                 {
-                    if (touchPosition.x >= screenWidth)
-                    {
-                        player.ChangeActiveLeg(-1);
-                        player.movementHandler.MoveSide(1);
-                        player.rotationHandler.ResetRotation(-1);
-                    } 
-                    else if (touchPosition.x < screenWidth)
-                    {
-                        player.ChangeActiveLeg(1);
-                        player.movementHandler.MoveSide(-1);
-                        player.rotationHandler.ResetRotation(1);                   
-                    }
+                    MoveRight();
+                } 
+                else if (touchPosition.x < screenWidth)
+                {
+                    MoveLeft();          
                 }
             }
         }
+    }
+
+    private void CheckForJoystickInput()
+    {
+        joystickDirection = joystick.Horizontal;
+            
+        if (joystickDirection > 0)
+        {
+            MoveRightByJoystick();
+        }
+        else if (joystickDirection < 0)
+        {
+            MoveLeftByJoystick();
+        }
+    }
+
+    private void MoveRight()
+    {
+        ResetRotation(-1);
+        ChangeActiveLeg(-1);
+        player.movementHandler.MoveSide(1);
+    }
+
+    private void MoveLeft()
+    {
+        ResetRotation(1);
+        ChangeActiveLeg(1);
+        player.movementHandler.MoveSide(-1);
+    }
+    
+    private void MoveRightByJoystick()
+    {
+        ResetRotation(-1);
+        ChangeActiveLeg(-1);
+        player.movementHandler.MoveSideByJoystick(1);
+    }
+
+    private void MoveLeftByJoystick()
+    {
+        ResetRotation(1);
+        ChangeActiveLeg(1);
+        player.movementHandler.MoveSideByJoystick(-1);
+    }
+
+    private void ChangeActiveLeg(int direction)
+    {
+        player.ChangeActiveLeg(direction);
+    }
+
+    private void ResetRotation(int direction)
+    {
+        player.rotationHandler.ResetRotation(direction);
+    }
+
+    private void HideJoystick()
+    {
+        joystick.HideJoystick();
     }
 }

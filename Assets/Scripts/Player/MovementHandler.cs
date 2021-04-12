@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
 {
-private Coroutine currentSideMovement = null;
+    private float p;
+    private Coroutine currentSideMovement = null;
 
     public Player player;
     public float xPosition = 0;
+    public float targetPositionX = 0;
     public float forwardMovementSpeed = 20.0f;
     public float sideMovementDistance = 2.0f;
-    public float sideMovementSpeed = 2.0f;
+    public float sideMovementDistanceByJoystick = 10.0f;
+    public float sideMovementTime = 2.0f;
     
     private void Update()
     {
@@ -46,7 +49,7 @@ private Coroutine currentSideMovement = null;
     
     private void StartSideMovement(int direction)
     {
-        currentSideMovement = StartCoroutine (SmoothLerp (sideMovementSpeed, direction));
+        currentSideMovement = StartCoroutine (SmoothLerp (sideMovementTime, direction));
     }
 
     public void StopSideMovement()
@@ -80,5 +83,13 @@ private Coroutine currentSideMovement = null;
     {
         StopSideMovement();
         StartSideMovement(direction);
+    }
+
+    public void MoveSideByJoystick(int direction)
+    {
+        targetPositionX += direction * sideMovementDistanceByJoystick * Time.deltaTime;
+        
+        xPosition = Mathf.SmoothDamp(xPosition, targetPositionX, ref p, Time.deltaTime);
+        player.transform.position = new Vector3(xPosition, player.transform.position.y, player.transform.position.z);
     }
 }
