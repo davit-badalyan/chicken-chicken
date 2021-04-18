@@ -46,8 +46,7 @@ public class Player : MonoBehaviour
         rotationHandler.fallDirection = -1;
         
         movementHandler.xPosition = 0;
-        movementHandler.targetPositionX = 0;
-        
+
         transform.position = startPosition;
         transform.rotation = Quaternion.identity;
         
