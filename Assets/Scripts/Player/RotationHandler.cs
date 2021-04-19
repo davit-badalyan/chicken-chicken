@@ -33,7 +33,7 @@ public class RotationHandler : MonoBehaviour
     {
         targetAngle += fallDirection * fallingSpeed * Time.deltaTime;
                 
-        zRotation = Mathf.SmoothDamp(zRotation, targetAngle, ref r, Time.deltaTime);
+        zRotation = Mathf.LerpAngle(zRotation, targetAngle, Time.deltaTime * 50);
         transform.eulerAngles = new Vector3(0, 0, zRotation);
     }
 
@@ -45,6 +45,7 @@ public class RotationHandler : MonoBehaviour
     public void ResetRotation(int direction)
     {
         targetAngle = 0;
+        zRotation = 0;
         fallDirection = direction;
     }
 }

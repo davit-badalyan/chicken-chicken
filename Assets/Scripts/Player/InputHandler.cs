@@ -70,11 +70,11 @@ public class InputHandler : MonoBehaviour
             
         if (joystickDirection > 0)
         {
-            MoveRightByJoystick();
+            MoveRight();
         }
         else if (joystickDirection < 0)
         {
-            MoveLeftByJoystick();
+            MoveLeft();
         }
     }
 
@@ -92,20 +92,6 @@ public class InputHandler : MonoBehaviour
         player.movementHandler.MoveSide(-1);
     }
     
-    private void MoveRightByJoystick()
-    {
-        ResetRotation(-1);
-        ChangeActiveLeg(-1);
-        player.movementHandler.MoveSideByJoystick(1);
-    }
-
-    private void MoveLeftByJoystick()
-    {
-        ResetRotation(1);
-        ChangeActiveLeg(1);
-        player.movementHandler.MoveSideByJoystick(-1);
-    }
-
     private void ChangeActiveLeg(int direction)
     {
         player.ChangeActiveLeg(direction);

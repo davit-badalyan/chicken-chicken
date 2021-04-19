@@ -12,9 +12,7 @@ public class MovementHandler : MonoBehaviour
     public float targetPositionX = 0;
     public float forwardMovementSpeed = 20.0f;
     public float sideMovementDistance = 2.0f;
-    public float sideMovementDistanceByJoystick = 10.0f;
-    public float sideMovementTime = 2.0f;
-    
+
     private void Update()
     {
         if (GameManager.Instance.GameStarted)
@@ -26,13 +24,15 @@ public class MovementHandler : MonoBehaviour
             else
             {
                 GameManager.Instance.PauseGame();
+                xPosition = 0;
             } 
         }
     }
     
     private void MoveForward()
     {
-        player.transform.Translate(Vector3.forward * (Time.deltaTime * forwardMovementSpeed));
+        xPosition = Mathf.Lerp(xPosition, targetPositionX, Time.deltaTime * 25);
+        player.transform.position = new Vector3(xPosition, player.transform.position.y, player.transform.position.z + Time.deltaTime * forwardMovementSpeed);
     }
 
     private bool IsOnGround()
@@ -47,49 +47,10 @@ public class MovementHandler : MonoBehaviour
         return result;
     }
     
-    private void StartSideMovement(int direction)
-    {
-        currentSideMovement = StartCoroutine (SmoothLerp (sideMovementTime, direction));
-    }
-
-    public void StopSideMovement()
-    {
-        if (currentSideMovement != null)
-        {
-            StopCoroutine (currentSideMovement);
-        }
-    }
-    
-    private IEnumerator SmoothLerp(float time, int direction)
-    {
-        xPosition += direction * sideMovementDistance;
-        float elapsedTime = 0;
-        
-        while (elapsedTime < time)
-        {
-            Vector3 playerPos = player.transform.position;
-            Vector3 targetPos = new Vector3(xPosition, playerPos.y, playerPos.z);
-            
-            playerPos = Vector3.Lerp(playerPos, targetPos, elapsedTime / time);
-            player.transform.position = playerPos;
-            
-            elapsedTime += Time.deltaTime;
-            
-            yield return null;
-        }
-    }
     
     public void MoveSide(int direction)
     {
-        StopSideMovement();
-        StartSideMovement(direction);
+        targetPositionX += direction * sideMovementDistance;
     }
-
-    public void MoveSideByJoystick(int direction)
-    {
-        targetPositionX += direction * sideMovementDistanceByJoystick * Time.deltaTime;
-        
-        xPosition = Mathf.SmoothDamp(xPosition, targetPositionX, ref p, Time.deltaTime);
-        player.transform.position = new Vector3(xPosition, player.transform.position.y, player.transform.position.z);
-    }
+    
 }

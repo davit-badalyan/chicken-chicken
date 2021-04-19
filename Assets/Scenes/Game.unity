@@ -3638,9 +3638,7 @@ MonoBehaviour:
   xPosition: 0
   targetPositionX: 0
   forwardMovementSpeed: 20
-  sideMovementDistance: 2
-  sideMovementDistanceByJoystick: 10
-  sideMovementTime: 2
+  sideMovementDistance: 1.5
 --- !u!114 &1350475224
 MonoBehaviour:
   m_ObjectHideFlags: 0
