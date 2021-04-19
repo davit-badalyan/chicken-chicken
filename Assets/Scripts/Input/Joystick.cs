@@ -1,29 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    public float Horizontal
-    {
-        get { return (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x; }
-    }
-
-    public float Vertical
-    {
-        get { return (snapY) ? SnapFloat(input.y, AxisOptions.Vertical) : input.y; }
-    }
+    public int Horizontal => (snapX) ? SnapFloat((int)input.x, AxisOptions.Horizontal) : (int)input.x;
 
     public float HandleRange
     {
-        get { return handleRange; }
         set { handleRange = Mathf.Abs(value); }
     }
 
     public float DeadZone
     {
-        get { return deadZone; }
         set { deadZone = Mathf.Abs(value); }
     }
     
@@ -33,12 +24,20 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     private Camera cam;
     private float deadZone;
     private float handleRange = 1;
+    private float screenWidth;
     private bool snapX = false;
-    private bool snapY = false;
 
-    public AxisOptions axisOptions = AxisOptions.Both;
+    public enum AxisOptions { Horizontal }
+    public AxisOptions axisOptions = AxisOptions.Horizontal;
+    
+    public InputHandler inputHandler;
     public RectTransform background;
     public RectTransform handle;
+
+    private void Awake()
+    {
+        screenWidth = Screen.width / 2.0f;
+    }
 
     private void Start()
     {
@@ -77,61 +76,25 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         {
             input = new Vector2(input.x, 0f);
         }
-        else if (axisOptions == AxisOptions.Vertical)
-        {
-            input = new Vector2(0f, input.y);
-        }
     }
 
-    private float SnapFloat(float value, AxisOptions snapAxis)
+    private int SnapFloat(int value, AxisOptions snapAxis)
     {
         if (value == 0)
         {
             return value;
         }
+
+        float angle = Vector2.Angle(input, Vector2.up);
+        if (snapAxis == AxisOptions.Horizontal)
+        {
+            if (angle < 22.5f || angle > 157.5f)
+            {
+                return 0;
+            }
+        }
         
-        if (axisOptions == AxisOptions.Both)
-        {
-            float angle = Vector2.Angle(input, Vector2.up);
-            if (snapAxis == AxisOptions.Horizontal)
-            {
-                if (angle < 22.5f || angle > 157.5f)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return (value > 0) ? 1 : -1;
-                }
-            }
-            else if (snapAxis == AxisOptions.Vertical)
-            {
-                if (angle > 67.5f && angle < 112.5f)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return (value > 0) ? 1 : -1;
-                }
-            }
-            
-            return value;
-        }
-        else
-        {
-            if (value > 0)
-            {
-                return 1;
-            }
-
-            if (value < 0)
-            {
-                return -1;
-            }
-        }
-
-        return 0;
+        return value;
     }
 
     private Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition)
@@ -163,14 +126,26 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         ShowJoystick();
         background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
-        
+
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
-            
+            Vector2 touchPosition = touch.position;
+
             if (touch.phase == TouchPhase.Moved)
             {
                 OnDrag(eventData); 
+            }
+            else if (touch.phase == TouchPhase.Began)
+            {
+                if (touchPosition.x >= screenWidth)
+                {
+                    inputHandler.MoveRight();
+                } 
+                else if (touchPosition.x < screenWidth)
+                {
+                    inputHandler.MoveLeft();          
+                }
             }
         }
     }
@@ -200,5 +175,3 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         background.gameObject.SetActive(false);
     }
 }
-
-public enum AxisOptions { Both, Horizontal, Vertical }

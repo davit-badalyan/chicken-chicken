@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
 {
-    private float p;
-    private Coroutine currentSideMovement = null;
 
     public Player player;
-    public float xPosition = 0;
-    public float targetPositionX = 0;
+    float xPosition = 0;
+    float targetPositionX = 0;
     public float forwardMovementSpeed = 20.0f;
     public float sideMovementDistance = 2.0f;
+
+
+    public void ResetState()
+    {
+        xPosition = 0;
+        targetPositionX = 0;
+    }
 
     private void Update()
     {
