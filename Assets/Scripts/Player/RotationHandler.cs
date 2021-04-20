@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class RotationHandler : MonoBehaviour
 {
-    private float r;
-
     public Player player;
     public int fallDirection = 0;
     public float zRotation = 0;
@@ -47,5 +45,12 @@ public class RotationHandler : MonoBehaviour
         targetAngle = 0;
         zRotation = 0;
         fallDirection = direction;
+    }
+
+    public void Reset()
+    {
+        zRotation = 0;
+        targetAngle = 0;
+        fallDirection = -1;
     }
 }

@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
 {
-
+    private float xPosition;
+    private float targetPositionX;
+    
     public Player player;
-    float xPosition = 0;
-    float targetPositionX = 0;
     public float forwardMovementSpeed = 20.0f;
     public float sideMovementDistance = 2.0f;
-
-
-    public void ResetState()
-    {
-        xPosition = 0;
-        targetPositionX = 0;
-    }
 
     private void Update()
     {
@@ -24,7 +17,7 @@ public class MovementHandler : MonoBehaviour
         {
             if (IsOnGround() && !GameManager.Instance.PlayerFailed)
             {
-                MoveForward();
+                Move();
             }
             else
             {
@@ -34,7 +27,7 @@ public class MovementHandler : MonoBehaviour
         }
     }
     
-    private void MoveForward()
+    private void Move()
     {
         xPosition = Mathf.Lerp(xPosition, targetPositionX, Time.deltaTime * 25);
         player.transform.position = new Vector3(xPosition, player.transform.position.y, player.transform.position.z + Time.deltaTime * forwardMovementSpeed);
@@ -52,10 +45,14 @@ public class MovementHandler : MonoBehaviour
         return result;
     }
     
-    
     public void MoveSide(int direction)
     {
         targetPositionX += direction * sideMovementDistance;
     }
     
+    public void Reset()
+    {
+        xPosition = 0;
+        targetPositionX = 0;
+    }
 }

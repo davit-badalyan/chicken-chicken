@@ -77,4 +77,10 @@ public class InputHandler : MonoBehaviour
         ChangeActiveLeg(1);
         player.movementHandler.MoveSide(-1);
     }
+
+    public void Reset()
+    {
+        joystickDirection = 0;
+        joystick.HideJoystick();
+    }
 }

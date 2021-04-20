@@ -31,27 +31,26 @@ public class Player : MonoBehaviour
         instance = this;
     }
     
-    void Start()
+    private void Start()
     {
         Resume();
     }
-    
-    public void Resume()
-    {
-        inputHandler.joystickDirection = 0;
-        inputHandler.joystick.HideJoystick();
-        
-        rotationHandler.zRotation = 0;
-        rotationHandler.targetAngle = 0;
-        rotationHandler.fallDirection = -1;
-        
-        movementHandler.ResetState();
 
+    private void Reset()
+    {
         transform.position = startPosition;
         transform.rotation = Quaternion.identity;
         
         rightLeg.SetActive(true);
         leftLeg.SetActive(false);
+    }
+    
+    public void Resume()
+    {
+        Reset();
+        inputHandler.Reset();
+        rotationHandler.Reset();
+        movementHandler.Reset();
     }
     
     public void ChangeActiveLeg(int direction)
